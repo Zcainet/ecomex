@@ -1,0 +1,67 @@
+{% extends "contenido/base.html" %}
+{% load static %}
+
+{% block title %}Viajes Terminados - EcoTurismo México{% endblock %}
+
+{% block content %}
+
+<section class="py-12">
+    <div class="mb-8 rounded-2xl overflow-hidden shadow-lg max-h-64">
+        <img src="{% static 'contenido/img/img-desierto.jpg' %}"
+             alt="Paisaje desértico"
+             class="w-full h-64 object-cover">
+    </div>
+
+    <h1 class="text-3xl font-bold text-gray-900 mb-4">Viajes Terminados</h1>
+    <p class="text-gray-600 mb-8">
+        Aquí puedes ver los viajes que ya concluyeron. Esta sección sirve como
+        un historial de experiencias y aventuras que han marcado a nuestros viajeros.
+    </p>
+
+    {% if viajes_lista %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for x in viajes_lista %}
+            <article class="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col">
+                {% if x.imagen %}
+                    <img src="{{ x.imagen.url }}" alt="{{ x.destino }}"
+                         class="w-full h-48 object-cover">
+                {% else %}
+                    <img src="{% static 'contenido/img/img-bosque.jpg' %}" alt="EcoTurismo México"
+                         class="w-full h-48 object-cover">
+                {% endif %}
+
+                <div class="p-4 flex-1 flex flex-col">
+                    <h2 class="text-xl font-semibold text-gray-900">{{ x.destino }}</h2>
+                    <p class="text-sm text-gray-600 mb-2">{{ x.lugar }}</p>
+
+                    <p class="text-xs text-gray-500 mb-2">
+                        <strong>Salida:</strong> {{ x.fecha_salida }}<br>
+                        <strong>Regreso:</strong> {{ x.fecha_regreso }}
+                    </p>
+
+                    <p class="text-sm text-gray-700 line-clamp-3 mb-3">
+                        {{ x.descripcion|safe }}
+                    </p>
+
+                    <div class="mt-auto flex items-center justify-between">
+                        <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-700">
+                            Finalizado
+                        </span>
+                        <span class="text-sm font-semibold text-green-700">
+                            ${{ x.costo }}
+                        </span>
+                    </div>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="bg-white rounded-2xl shadow-lg p-8 text-center">
+            <p class="text-gray-500">
+                Por el momento no hay viajes terminados registrados.
+            </p>
+        </div>
+    {% endif %}
+</section>
+
+{% endblock %}

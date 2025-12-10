@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}EcoTurismo México{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 relative">
+
+    <!-- Fondo decorativo -->
+    <div class="fixed inset-0 -z-10 opacity-25"
+         style="background-image: url('{% static "contenido/img/img-bosque-neblado.jpg" %}');
+                background-size: cover;
+                background-position: center;">
+    </div>
+
+
+    {% include "contenido/tabBar.html" %}
+
+    <main class="container mx-auto px-6 py-12">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer class="bg-green-600 border-t border-green-700 mt-16">
+        <div class="container mx-auto px-6 py-8 text-center text-green-100">
+            <p>&copy; 2025 EcoTurismo México. Todos los derechos reservados.</p>
+            <p class="text-sm mt-1">Conectando con la naturaleza, un viaje a la vez.</p>
+        </div>
+    </footer>
+
+</body>
+</html>

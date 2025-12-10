@@ -1,0 +1,78 @@
+{% extends "contenido/base.html" %}
+{% load static %}
+
+{% block title %}Inicio - EcoTurismo México{% endblock %}
+
+{% block content %}
+
+<section class="text-center py-16 bg-green-50 rounded-2xl">
+    <div class="mb-8 rounded-2xl overflow-hidden shadow-lg max-h-64">
+        <img src="{% static 'contenido/img/img-bosque.jpg' %}"
+             alt="Paisaje natural"
+             class="w-full h-64 object-cover">
+    </div>
+    <h1 class="text-4xl font-bold text-gray-900 mb-4">Descubre la Belleza Natural de México</h1>
+    <p class="text-lg text-gray-600 max-w-3xl mx-auto mb-8">
+        Ofrecemos experiencias únicas de ecoturismo en las zonas más impresionantes del país.
+        Conecta con la naturaleza, descubre culturas locales y crea recuerdos inolvidables.
+    </p>
+    <div class="flex justify-center space-x-4">
+        <a href="{% url 'viajes_proximos' %}" class="bg-green-600 text-white font-medium px-6 py-3 rounded-full shadow-lg hover:bg-green-700 transition duration-300">
+            Ver Próximos Recorridos
+        </a>
+        <a href="{% url 'viajes_terminados'%}" class="bg-gray-100 text-gray-700 font-medium px-6 py-3 rounded-full shadow-lg hover:bg-gray-200 transition duration-300">
+            Recorridos Realizados
+        </a>
+    </div>
+</section>
+
+<section class="py-16 bg-green-100 rounded-2xl shadow-lg my-16">
+    <div class="max-w-4xl mx-auto text-center px-6">
+        <h2 class="text-3xl font-bold text-gray-900 mb-6">Sobre EcoTurismo México</h2>
+        <p class="text-gray-700 text-base leading-relaxed">
+            Somos un equipo de apasionados por la naturaleza y la cultura mexicana. Nuestra misión es 
+            ofrecer aventuras de ecoturismo responsables y auténticas, que no solo te permitan 
+            descubrir paisajes increíbles, sino que también apoyen a las comunidades locales y 
+            promuevan la conservación del medio ambiente. Creemos que viajar puede ser una 
+            fuerza para el bien, y cada uno de nuestros recorridos está diseñado con ese principio en mente.
+        </p>
+    </div>
+</section>
+
+<section class="py-16">
+    <h2 class="text-3xl font-bold text-gray-900 text-center mb-12">Nuestros Pilares</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        
+        <div class="bg-white p-8 rounded-2xl shadow-xl text-center flex flex-col items-center">
+            <div class="bg-green-100 p-4 rounded-full mb-4">
+                <!-- icono misión -->
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">Misión</h3>
+            <p class="text-gray-600 text-sm">
+                Dar comodidad en los mejores tours de México, fomentando el respeto por la naturaleza y las culturas locales a través de experiencias de ecoturismo sostenibles y enriquecedoras.
+            </p>
+        </div>
+
+        <div class="bg-white p-8 rounded-2xl shadow-xl text-center flex flex-col items-center">
+            <div class="bg-green-100 p-4 rounded-full mb-4">
+                <!-- icono visión -->
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">Visión</h3>
+            <p class="text-gray-600 text-sm">
+                Ser parte de ti en cada momento del viaje
+            </p>
+        </div>
+
+        <div class="bg-white p-8 rounded-2xl shadow-xl text-center flex flex-col items-center">
+            <div class="bg-green-100 p-4 rounded-full mb-4">
+                <!-- icono valores -->
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">Valores</h3>
+            <p class="text-gray-600 text-sm">
+                atencion, compromiso y atencion 
+            </p>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
