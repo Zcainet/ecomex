@@ -1,0 +1,54 @@
+<nav class="bg-green-600 shadow-lg sticky top-0 z-50">
+    <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+        <a href="{% url 'inicio' %}" class="flex items-center space-x-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+            <div class="flex flex-col">
+                <span class="font-bold text-lg text-white">EcoTurismo México</span>
+                <span class="text-xs text-green-100">Recorridos por la naturaleza de México</span>
+            </div>
+        </a>
+
+        <ul class="flex items-center space-x-6">
+            <li>
+                <a href="{% url 'inicio' %}" class="text-white hover:text-green-200 font-medium">Inicio</a>
+            </li>
+            <li>
+                <a href="{% url 'viajes_proximos' %}" class="text-white hover:text-green-200 font-medium">Próximos Viajes</a>
+            </li>
+            <li>
+                <a href="{% url 'viajes_terminados' %}" class="text-white hover:text-green-200 font-medium">Viajes Finalizados</a>
+            </li>
+            <li>
+                <button id="theme-toggle"
+                        class="px-3 py-1 rounded-full border border-white/40 text-white text-xs hover:bg-white/10">
+                    🌙 / ☀️
+                </button>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<script>
+  const THEME_KEY = "eco_theme";
+  const root = document.documentElement;
+
+  function aplicarTema(theme) {
+      if (theme === "dark") {
+          root.classList.add("dark");
+      } else {
+          root.classList.remove("dark");
+      }
+  }
+
+  let temaGuardado = localStorage.getItem(THEME_KEY) || "light";
+  aplicarTema(temaGuardado);
+
+  document.getElementById("theme-toggle").addEventListener("click", () => {
+      temaGuardado = (temaGuardado === "dark") ? "light" : "dark";
+      localStorage.setItem(THEME_KEY, temaGuardado);
+      aplicarTema(temaGuardado);
+  });
+</script>

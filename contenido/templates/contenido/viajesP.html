@@ -1,0 +1,188 @@
+{% extends "contenido/base.html" %}
+{% load static %}
+
+{% block title %}Próximos Viajes - EcoTurismo México{% endblock %}
+
+{% block content %}
+
+<section class="py-6">
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6">Nuestros Próximos Viajes</h1>
+
+    <!-- Barra de búsqueda y filtros -->
+    <form method="get" class="mb-8 bg-white dark:bg-gray-800 rounded-2xl shadow p-4 md:p-6 flex flex-col md:flex-row md:items-end md:space-x-4 space-y-4 md:space-y-0">
+        <div class="flex-1">
+            <label for="q" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Buscar por destino</label>
+            <input type="text" name="q" id="q"
+                   value="{{ q }}"
+                   class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 focus:border-green-500 focus:ring-green-500"
+                   placeholder="Ej. Selva Lacandona, Sierra Norte, desierto...">
+        </div>
+        <div class="w-full md:w-48">
+            <label for="precio_max" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Precio máximo (MXN)</label>
+            <input type="number" name="precio_max" id="precio_max" min="0" step="0.01"
+                   value="{{ precio_max }}"
+                   class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 focus:border-green-500 focus:ring-green-500"
+                   placeholder="Ej. 3500">
+        </div>
+        <div class="w-full md:w-48">
+            <label for="orden" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Ordenar por</label>
+            <select name="orden" id="orden"
+                    class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 focus:border-green-500 focus:ring-green-500">
+                <option value="fecha" {% if orden == "fecha" %}selected{% endif %}>Fecha de salida</option>
+                <option value="precio" {% if orden == "precio" %}selected{% endif %}>Precio (menor a mayor)</option>
+                <option value="precio_desc" {% if orden == "precio_desc" %}selected{% endif %}>Precio (mayor a menor)</option>
+            </select>
+        </div>
+        <div class="w-full md:w-auto">
+            <button type="submit"
+                    class="w-full inline-flex justify-center items-center px-4 py-2 rounded-lg bg-green-600 text-white font-semibold hover:bg-green-700 transition">
+                Filtrar viajes
+            </button>
+        </div>
+    </form>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+        {% for viaje in viajes_lista %}
+        <article class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden flex flex-col">
+
+            <div class="relative">
+                <img class="w-full h-56 object-cover"
+                     src="{% if viaje.imagen %}{{ viaje.imagen.url }}{% else %}{% static 'contenido/img/img-bosque.jpg' %}{% endif %}"
+                     alt="{{ viaje.destino }}">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                <div class="absolute bottom-4 left-4">
+                    <span class="inline-block bg-green-600 text-white text-xs font-semibold px-3 py-1 rounded-full shadow">
+                        Próximo viaje
+                    </span>
+                </div>
+            </div>
+
+            <div class="flex-1 flex flex-col p-6 space-y-3">
+                <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100">{{ viaje.destino }}</h2>
+                <p class="text-sm text-gray-500 flex items-center space-x-1">
+                    <span class="font-medium text-gray-700 dark:text-gray-200">Lugar:</span>
+                    <span class="text-gray-700 dark:text-gray-300">{{ viaje.lugar }}</span>
+                </p>
+
+                <p class="text-sm text-gray-600 dark:text-gray-300 line-clamp-3">
+                    {{ viaje.descripcion|striptags|truncatechars:140 }}
+                </p>
+
+                <div class="grid grid-cols-2 gap-3 text-sm text-gray-700 dark:text-gray-200 mt-2">
+                    <div>
+                        <p class="font-semibold text-gray-900 dark:text-gray-100">Salida</p>
+                        <p>{{ viaje.fecha_salida|date:"d/m/Y" }}</p>
+                    </div>
+                    <div>
+                        <p class="font-semibold text-gray-900 dark:text-gray-100">Regreso</p>
+                        <p>{{ viaje.fecha_regreso|date:"d/m/Y" }}</p>
+                    </div>
+                    <div>
+                        <p class="font-semibold text-gray-900 dark:text-gray-100">Duración</p>
+                        <p>{{ viaje.fecha_salida|date:"d/m" }} – {{ viaje.fecha_regreso|date:"d/m" }}</p>
+                    </div>
+                    <div>
+                        <p class="font-semibold text-gray-900 dark:text-gray-100">Costo</p>
+                        <p class="text-green-700 dark:text-green-400 font-bold">
+                            ${{ viaje.costo }} MXN
+                        </p>
+                    </div>
+                </div>
+
+                <div class="mt-4 flex justify-between items-center">
+                    <button type="button"
+                            class="favorito-btn text-gray-400 hover:text-red-500 transition"
+                            data-viaje-id="{{ viaje.id }}">
+                        ❤️
+                    </button>
+
+                    <a href="{% url 'viaje_detalle' viaje.id %}"
+                       class="inline-flex items-center text-sm font-semibold text-green-700 hover:text-green-900">
+                        Ver detalles
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M9 5l7 7-7 7" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </article>
+
+        {% empty %}
+        <div class="col-span-1 md:col-span-2 lg:col-span-3 text-center bg-white dark:bg-gray-800 p-12 rounded-2xl shadow-lg">
+            <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-100">No hay viajes próximos por el momento</h2>
+            <p class="text-gray-500 dark:text-gray-300 mt-2">¡Vuelve pronto! Estamos planeando nuevas aventuras.</p>
+        </div>
+        {% endfor %}
+
+    </div>
+
+    {% if page_obj.has_other_pages %}
+    <nav class="mt-8 flex justify-center">
+      <ul class="inline-flex items-center space-x-2 text-sm">
+        {% if page_obj.has_previous %}
+          <li>
+            <a href="?page={{ page_obj.previous_page_number }}&q={{ q }}&precio_max={{ precio_max }}&orden={{ orden }}"
+               class="px-3 py-1 rounded-lg border bg-white dark:bg-gray-800 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700">
+               « Anterior
+            </a>
+          </li>
+        {% endif %}
+
+        <li class="px-3 py-1 rounded-lg bg-green-600 text-white">
+          Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+        </li>
+
+        {% if page_obj.has_next %}
+          <li>
+            <a href="?page={{ page_obj.next_page_number }}&q={{ q }}&precio_max={{ precio_max }}&orden={{ orden }}"
+               class="px-3 py-1 rounded-lg border bg-white dark:bg-gray-800 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700">
+               Siguiente »
+            </a>
+          </li>
+        {% endif %}
+      </ul>
+    </nav>
+    {% endif %}
+
+</section>
+
+<script>
+const STORAGE_KEY = "eco_favoritos";
+let favoritos = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+
+function guardarFavoritos() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(favoritos));
+}
+
+function actualizarUIFavoritos() {
+    document.querySelectorAll(".favorito-btn").forEach(btn => {
+        const id = parseInt(btn.dataset.viajeId);
+        if (favoritos.includes(id)) {
+            btn.classList.add("text-red-500");
+            btn.classList.remove("text-gray-400");
+        } else {
+            btn.classList.add("text-gray-400");
+            btn.classList.remove("text-red-500");
+        }
+    });
+}
+
+document.querySelectorAll(".favorito-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+        const id = parseInt(btn.dataset.viajeId);
+        if (favoritos.includes(id)) {
+            favoritos = favoritos.filter(x => x !== id);
+        } else {
+            favoritos.push(id);
+        }
+        guardarFavoritos();
+        actualizarUIFavoritos();
+    });
+});
+
+actualizarUIFavoritos();
+</script>
+
+{% endblock %}

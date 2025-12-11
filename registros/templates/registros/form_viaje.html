@@ -1,0 +1,43 @@
+{% extends "contenido/base.html" %}
+
+{% block title %}{% if modo == "editar" %}Editar Viaje{% else %}Nuevo Viaje{% endif %} - EcoTurismo México{% endblock %}
+
+{% block content %}
+<section class="py-8 max-w-3xl mx-auto">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+        {% if modo == "editar" %}Editar viaje{% else %}Crear nuevo viaje{% endif %}
+    </h1>
+
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow p-6">
+        <form method="post" enctype="multipart/form-data" class="space-y-4">
+            {% csrf_token %}
+            {% for field in form %}
+                <div>
+                    <label for="{{ field.id_for_label }}"
+                           class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+                        {{ field.label }}
+                    </label>
+                    {{ field }}
+                    {% if field.help_text %}
+                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ field.help_text }}</p>
+                    {% endif %}
+                    {% for error in field.errors %}
+                        <p class="mt-1 text-xs text-red-600">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+
+            <div class="flex justify-between pt-4">
+                <a href="{% url 'panel_viajes' %}"
+                   class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 text-sm hover:bg-gray-50 dark:hover:bg-gray-700">
+                    Cancelar
+                </a>
+                <button type="submit"
+                        class="px-4 py-2 rounded-lg bg-green-600 text-white text-sm font-semibold hover:bg-green-700">
+                    Guardar
+                </button>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}

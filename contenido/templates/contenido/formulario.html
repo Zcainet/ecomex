@@ -1,0 +1,52 @@
+{% extends "contenido/base_form.html" %}
+
+{% block title %}Formulario de Pre-inscripción{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full bg-white dark:bg-gray-800 p-8 md:p-10 rounded-2xl shadow-xl">
+        <div>
+            <h2 class="text-3xl font-bold text-gray-900 dark:text-gray-100">Formulario de Pre-inscripción</h2>
+            <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">
+                Complete los siguientes datos y nos pondremos en contacto con usted.
+            </p>
+        </div>
+
+        {% if messages %}
+            <div class="mt-4 space-y-2">
+                {% for message in messages %}
+                    <div class="text-sm px-4 py-2 rounded-lg bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-200">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <form method="post" class="mt-6 space-y-4">
+            {% csrf_token %}
+            {% for field in form %}
+                <div>
+                    <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+                        {{ field.label }}
+                    </label>
+                    {{ field }}
+                    {% for error in field.errors %}
+                        <p class="mt-1 text-xs text-red-600">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+
+            <div class="flex items-center justify-between pt-4">
+                <a href="{% url 'inicio' %}"
+                   class="w-1/2 text-center border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition duration-300 mr-2">
+                    Cancelar
+                </a>
+                <button type="submit"
+                        class="w-1/2 text-center bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 ml-2">
+                    Enviar inscripción
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

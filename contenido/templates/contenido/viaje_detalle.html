@@ -1,0 +1,121 @@
+{% extends "contenido/base.html" %}
+{% load static %}
+
+{% block title %}Detalle del Viaje - EcoTurismo México{% endblock %}
+
+{% block content %}
+
+<section class="py-10">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+        <!-- Imagen principal -->
+        <div class="lg:col-span-2">
+            <div class="rounded-3xl overflow-hidden shadow-xl">
+                <img src="{% if viaje.imagen %}{{ viaje.imagen.url }}{% else %}{% static 'contenido/img/img-bosque.jpg' %}{% endif %}"
+                     alt="{{ viaje.destino }}"
+                     class="w-full h-80 md:h-[26rem] object-cover">
+            </div>
+        </div>
+
+        <!-- Resumen del viaje --><aside class="bg-white dark:bg-gray-800 rounded-3xl shadow-xl p-6 space-y-4">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ viaje.destino }}</h1>
+    <p class="text-sm text-gray-500 dark:text-gray-300">
+        {{ viaje.lugar }}
+    </p>
+
+    {% if viaje.cancelado %}
+        <div class="mt-2 px-3 py-2 rounded-lg bg-red-100 text-red-800 text-xs font-semibold dark:bg-red-900/40 dark:text-red-200">
+            Este viaje ha sido cancelado por el organizador.
+        </div>
+    {% endif %}
+
+    <div class="border-t border-gray-200 dark:border-gray-700 pt-4 space-y-3 text-sm text-gray-700 dark:text-gray-200">
+        <div class="flex justify-between">
+            <span class="font-semibold text-gray-900 dark:text-gray-100">Fecha de salida:</span>
+            <span>{{ viaje.fecha_salida|date:"d/m/Y" }}</span>
+        </div>
+        <div class="flex justify-between">
+            <span class="font-semibold text-gray-900 dark:text-gray-100">Fecha de regreso:</span>
+            <span>{{ viaje.fecha_regreso|date:"d/m/Y" }}</span>
+        </div>
+        <div class="flex justify-between">
+            <span class="font-semibold text-gray-900 dark:text-gray-100">Costo por persona:</span>
+            <span class="text-green-700 dark:text-green-400 font-bold">
+                ${{ viaje.costo }} MXN
+            </span>
+        </div>
+    </div>
+
+    <div class="pt-4 flex flex-col space-y-3">
+        {% if not viaje.cancelado %}
+            <a href="{% url 'inscribirse_viaje' viaje.id %}"
+               class="inline-flex justify-center items-center text-sm font-semibold px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700">
+                Quiero inscribirme a este viaje
+            </a>
+        {% endif %}
+        <a href="{% url 'viajes_proximos' %}"
+           class="inline-flex items-center justify-center text-sm font-semibold text-green-700 hover:text-green-900">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M15 19l-7-7 7-7" />
+            </svg>
+            Volver a la lista de viajes
+        </a>
+    </div>
+</aside>
+    </div>
+
+    <!-- Descripción completa -->
+    <div class="mt-10 bg-white dark:bg-gray-800 rounded-3xl shadow-xl p-6 md:p-8">
+        <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Descripción del viaje</h2>
+        <div class="prose max-w-none dark:prose-invert">
+            {{ viaje.descripcion|safe }}
+        </div>
+    </div>
+
+    {% if embed_url %}
+    <section class="mt-10">
+      <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Video del viaje</h2>
+      <div class="aspect-video rounded-3xl overflow-hidden shadow-xl">
+        <iframe
+          src="{{ embed_url }}"
+          class="w-full h-full"
+          frameborder="0"
+          allowfullscreen
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+    </section>
+    {% endif %}
+
+    {% if viaje.latitud and viaje.longitud %}
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <section class="mt-10">
+      <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Ubicación aproximada</h2>
+      <div id="mapa-viaje" class="w-full h-72 rounded-3xl shadow-lg overflow-hidden"></div>
+
+      <script>
+        const map = L.map("mapa-viaje").setView(
+          [{{ viaje.latitud }}, {{ viaje.longitud }}],
+          9
+        );
+
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          maxZoom: 18,
+          attribution: "&copy; OpenStreetMap",
+        }).addTo(map);
+
+        L.marker([{{ viaje.latitud }}, {{ viaje.longitud }}])
+          .addTo(map)
+          .bindPopup("{{ viaje.destino }}")
+          .openPopup();
+      </script>
+    </section>
+    {% endif %}
+</section>
+
+{% endblock %}
